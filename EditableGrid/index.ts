@@ -6,8 +6,6 @@ type DataSet = ComponentFramework.PropertyTypes.DataSet;
 export class EditableGrid implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 
 	private _container: HTMLDivElement;
-	private _select: HTMLDivElement;
-	private _selectedTags: string[] = [];
 
 	/**
 	 * Empty constructor.
@@ -24,12 +22,6 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 	 * @param container If a control is marked control-type='standard', it will receive an empty div element within which it can render its content.
 	 */
 	public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container: HTMLDivElement) {
-		// Add control initialization code
-		this._select = document.createElement("div");
-		this._select.id = "select";
-		this._select.className = "selectable-tags";
-		container.appendChild(this._select);
-
 		// Add control initialization code
 		this._container = document.createElement("div");
 		this._container.className = "table-like";
@@ -53,7 +45,6 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 
 			this._container.innerHTML = "";
 			var recordSet = context.parameters.recordSet;
-			let allTags: string[] = [];
 
 			var headers = <HTMLDivElement>document.createElement("div");
 			headers.className = "header";
@@ -71,85 +62,16 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 				recordDiv.className = "row";
 				context.parameters.recordSet.columns.forEach(column => {
 
-					if (column.displayName == "Tags" && recordSet.records[recordId].getValue(column.name) != null) {
-						var tagDiv = <HTMLDivElement>document.createElement("div");
-						tagDiv.className = "tags";
-						var recordTags = (<string>recordSet.records[recordId].getValue(column.name)).split(";");
-						allTags = allTags.concat(recordTags);
-
-						recordTags.forEach(tag => {
-							var tagSpan = <HTMLSpanElement>document.createElement("span");
-							tagSpan.className = "tag " + tag.toLowerCase().replace(' ', '-');
-							tagSpan.innerText = tag;
-							tagDiv.appendChild(tagSpan);
-						});
-
-						recordDiv.appendChild(tagDiv);
-					}
-					else {
-						var span = <HTMLSpanElement>document.createElement("span");
-						span.className = "element " + this.sanitizeNameToCss(column.displayName);
-						span.innerText = <string>recordSet.records[recordId].getValue(column.name);
-						recordDiv.appendChild(span);
-					}
+					var span = <HTMLSpanElement>document.createElement("span");
+					span.className = "element " + this.sanitizeNameToCss(column.displayName);
+					span.innerText = <string>recordSet.records[recordId].getValue(column.name);
+					recordDiv.appendChild(span);
 
 				});
 				this._container.appendChild(recordDiv);
 			});
 
-			let uniqueTags = allTags.filter(
-				(thing, i, arr) => arr.findIndex(t => t === thing) === i && thing !== ""
-			);
-
-			this._select.innerHTML = '';
-
-			uniqueTags.forEach(tag => {
-				var tagSpan = <HTMLSpanElement>document.createElement("span");
-				tagSpan.className = "selectable-tag unselected " + tag.toLowerCase().replace(' ', '-');
-				tagSpan.innerText = tag;
-
-				tagSpan.addEventListener("click", (e: Event) => {
-					let clickedElement = <HTMLSpanElement>e.srcElement;
-					clickedElement.classList.contains('unselected') ? clickedElement.classList.remove('unselected') : clickedElement.classList.add('unselected');
-					clickedElement.classList.contains('unselected') ? this._selectedTags.splice(this._selectedTags.indexOf(clickedElement.innerText), 1) : this._selectedTags.push(clickedElement.innerText);
-					this.filterList();
-				});
-
-				this._select.appendChild(tagSpan);
-			});
-
 		}
-	}
-
-	private filterList(): void {
-
-		if (this._selectedTags.length === 0) {
-			Array.from(this._container.children).forEach(element => {
-				if (element.className === 'header')
-					return;
-
-				(<HTMLDivElement>element).style.removeProperty("display");
-			});
-			return;
-		}
-		Array.from(this._container.children).forEach(element => {
-
-			if (element.className === 'header')
-				return;
-
-			let tagFound = false;
-			this._selectedTags.forEach(tag => {
-				let sanitizedTag = tag.toLowerCase().replace(' ', '-');
-
-				if (tagFound || element.getElementsByClassName(sanitizedTag).length > 0) {
-					(<HTMLDivElement>element).style.removeProperty("display");
-					tagFound = true;
-					return;
-				}
-			});
-			if (!tagFound)
-				(<HTMLDivElement>element).style.display = 'none';
-		});
 	}
 
 	/** 
