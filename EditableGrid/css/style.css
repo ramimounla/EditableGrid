@@ -23,7 +23,6 @@ a.hyperlink, a.hyperlink:visited{
 }
 
 .row {
-    cursor: grab;
     background: white;
     border-bottom-width: 2px;
     border-color: #6E6F77;
