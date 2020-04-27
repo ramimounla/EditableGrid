@@ -66,7 +66,38 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 					span.className = "element " + this.sanitizeNameToCss(column.displayName);
 
 					var input = <HTMLInputElement>document.createElement("input");
-					input.value = <string>recordSet.records[recordId].getValue(column.name);
+
+					if(column.dataType === "Lookup.Simple"){
+						//@ts-ignore
+						input.value = recordSet.records[recordId].getValue(column.name).name;
+
+						input.addEventListener('click', e => {
+							//@ts-ignore
+							var lookupOptions = {
+								defaultEntityType: column.name,
+								entityTypes: [column.name],
+								allowMultiSelect: false
+							};
+							 
+							//@ts-ignore
+							Xrm.Utility.lookupObjects(lookupOptions)
+								.then(function(result: any){
+									if(result.length > 0){
+										input.value = result[0].name;
+									}
+								})
+								.fail(function(error: any){
+									alert(error);
+								});
+
+						});
+					}
+					else{
+						input.value = <string>recordSet.records[recordId].getValue(column.name);
+
+					}
+
+					
 
 					span.appendChild(input);
 					recordDiv.appendChild(span);
