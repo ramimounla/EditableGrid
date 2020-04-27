@@ -64,7 +64,11 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 
 					var span = <HTMLSpanElement>document.createElement("span");
 					span.className = "element " + this.sanitizeNameToCss(column.displayName);
-					span.innerText = <string>recordSet.records[recordId].getValue(column.name);
+
+					var input = <HTMLInputElement>document.createElement("input");
+					input.value = <string>recordSet.records[recordId].getValue(column.name);
+
+					span.appendChild(input);
 					recordDiv.appendChild(span);
 
 				});
