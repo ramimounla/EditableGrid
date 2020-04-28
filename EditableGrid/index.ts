@@ -61,43 +61,90 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 				var recordDiv = <HTMLDivElement>document.createElement("div");
 				recordDiv.className = "row";
 				context.parameters.recordSet.columns.forEach(column => {
-
+					
+					recordDiv.id = recordId;
 					var span = <HTMLSpanElement>document.createElement("span");
 					span.className = "element " + this.sanitizeNameToCss(column.displayName);
 
 					var input = <HTMLInputElement>document.createElement("input");
 
-					if(column.dataType === "Lookup.Simple"){
+					if (column.dataType === "Lookup.Simple" && column.name === "dxc_variation") { 
+
+						
+
 						//@ts-ignore
-						input.value = recordSet.records[recordId].getValue(column.name).name;
+						input.value = recordSet.records[recordId].getValue(column.name) === null ? "" : recordSet.records[recordId].getValue(column.name).name;
+
+						input.addEventListener('click', e => {
+
+							//@ts-ignore
+							var jurisdiction = Xrm.Page.getAttribute("dxc_juridiction").getValue()[0].id;
+							//@ts-ignore
+							var recordId = input.parentElement.parentElement.id;
+							//@ts-ignore
+							var gameId = context.parameters.recordSet.records[recordId].getValue("dxc_game").id.guid;
+
+							var filter  = "<filter type='and'><condition attribute='statecode' operator='eq' value='0' /><condition attribute='dxc_jurisdiction' operator='eq' value='" + jurisdiction + "' /><condition attribute='dxc_game' operator='eq' value='" + gameId + "' /></filter>";
+
+							//@ts-ignore
+							var lookupOptions = {
+								defaultEntityType: "dxc_variationjurisdiction",
+								entityTypes: ["dxc_variationjurisdiction"],
+								disableMru: true,
+								allowMultiSelect: false,
+
+								filters: [{
+									filterXml: filter,
+									entityLogicalName: "dxc_variationjurisdiction"
+								}]
+							};
+
+							//@ts-ignore
+							Xrm.Utility.lookupObjects(lookupOptions)
+								.then(function (result: any) {
+									if (result.length > 0) {
+										input.value = result[0].name;
+									}
+								})
+								.fail(function (error: any) {
+									alert(error);
+								});
+
+						});
+
+
+					}
+					else if (column.dataType === "Lookup.Simple") {
+						//@ts-ignore
+						input.value = recordSet.records[recordId].getValue(column.name) === null ? "" : recordSet.records[recordId].getValue(column.name).name;
 
 						input.addEventListener('click', e => {
 							//@ts-ignore
 							var lookupOptions = {
 								defaultEntityType: column.name,
 								entityTypes: [column.name],
-								allowMultiSelect: false
+								allowMultiSelect: false,
 							};
-							 
+
 							//@ts-ignore
 							Xrm.Utility.lookupObjects(lookupOptions)
-								.then(function(result: any){
-									if(result.length > 0){
+								.then(function (result: any) {
+									if (result.length > 0) {
 										input.value = result[0].name;
 									}
 								})
-								.fail(function(error: any){
+								.fail(function (error: any) {
 									alert(error);
 								});
 
 						});
 					}
-					else{
+					else {
 						input.value = <string>recordSet.records[recordId].getValue(column.name);
 
 					}
 
-					
+
 
 					span.appendChild(input);
 					recordDiv.appendChild(span);
