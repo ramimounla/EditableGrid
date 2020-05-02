@@ -33,6 +33,11 @@ a.hyperlink, a.hyperlink:visited {
     border-color: #6E6F77;
 }
 
+button {
+    margin: 5px;
+    display: list-item;
+}
+
 /* .row:nth-child(even) {
     background: #EEE;
 }

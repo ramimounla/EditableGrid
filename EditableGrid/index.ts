@@ -61,16 +61,14 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 				var recordDiv = <HTMLDivElement>document.createElement("div");
 				recordDiv.className = "row";
 				context.parameters.recordSet.columns.forEach(column => {
-					
+
 					recordDiv.id = recordId;
 					var span = <HTMLSpanElement>document.createElement("span");
 					span.className = "element " + this.sanitizeNameToCss(column.displayName);
 
 					var input = <HTMLInputElement>document.createElement("input");
 
-					if (column.dataType === "Lookup.Simple" && column.name === "dxc_variation") { 
-
-						
+					if (column.dataType === "Lookup.Simple" && column.name === "dxc_variation") {
 
 						//@ts-ignore
 						input.value = recordSet.records[recordId].getValue(column.name) === null ? "" : recordSet.records[recordId].getValue(column.name).name;
@@ -84,7 +82,7 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 							//@ts-ignore
 							var gameId = context.parameters.recordSet.records[recordId].getValue("dxc_game").id.guid;
 
-							var filter  = "<filter type='and'><condition attribute='statecode' operator='eq' value='0' /><condition attribute='dxc_jurisdiction' operator='eq' value='" + jurisdiction + "' /><condition attribute='dxc_game' operator='eq' value='" + gameId + "' /></filter>";
+							var filter = "<filter type='and'><condition attribute='statecode' operator='eq' value='0' /><condition attribute='dxc_jurisdiction' operator='eq' value='" + jurisdiction + "' /><condition attribute='dxc_game' operator='eq' value='" + gameId + "' /></filter>";
 
 							//@ts-ignore
 							var lookupOptions = {
@@ -141,18 +139,32 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 					}
 					else {
 						input.value = <string>recordSet.records[recordId].getValue(column.name);
-
 					}
-
-
 
 					span.appendChild(input);
 					recordDiv.appendChild(span);
 
+
 				});
+
+				var addNewButton = <HTMLButtonElement>document.createElement("button");
+				addNewButton.innerText = "Edit";
+
+				var buttonSpan = <HTMLDivElement>document.createElement("span");
+				// recordDiv.className = "row";
+				buttonSpan.appendChild(addNewButton);
+				recordDiv.appendChild(buttonSpan);
+
 				this._container.appendChild(recordDiv);
 			});
 
+			var addNewButton = <HTMLButtonElement>document.createElement("button");
+			addNewButton.innerText = "Add new";
+
+			var buttonDiv = <HTMLDivElement>document.createElement("div");
+			// recordDiv.className = "row";
+			buttonDiv.appendChild(addNewButton);
+			this._container.appendChild(buttonDiv);
 		}
 	}
 
