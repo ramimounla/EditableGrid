@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="XrmEnterprise" constructor="EditableGrid" version="0.0.15" display-name-key="EditableGrid" description-key="EditableGrid description" control-type="standard">
+  <control namespace="XrmEnterprise" constructor="EditableGrid" version="0.0.21" display-name-key="EditableGrid" description-key="EditableGrid description" control-type="standard">
     <!-- dataset node represents a set of entity records on CDS; allow more than one datasets -->
     <data-set name="recordSet" display-name-key="Record Set" description-key="The list of records to be displayed in the data set">
       <!-- 'property-set' node represents a unique, configurable property that each record in the dataset must provide. -->

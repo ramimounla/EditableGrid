@@ -71,7 +71,7 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 				var editButton = <HTMLButtonElement>document.createElement("button");
 				editButton.innerText = "Edit";
 				//@ts-ignore
-				editButton.addEventListener("click", (e: Event) => { Xrm.Navigation.navigateTo({ pageType: 'entityrecord', entityName: 'quotedetail', entityId: editButton.parentElement.parentElement.id, formType: 2 }, { target: 2, position: 1, width: { value: 80, unit: '%' } }) });
+				editButton.addEventListener("click", (e: Event) =>  Xrm.Navigation.navigateTo({ pageType: 'entityrecord', entityName: 'quotedetail', entityId: editButton.parentElement.parentElement.id, formType: 2 }, { target: 2, position: 1, width: { value: 80, unit: '%' } }).then(Xrm.Page.data.refresh(false) )  );
 
 				var buttonSpan = <HTMLDivElement>document.createElement("span");
 				buttonSpan.appendChild(editButton);
@@ -87,7 +87,7 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 
 					var input = <HTMLInputElement>document.createElement("input");
 
-					if (column.dataType === "Lookup.Simple" && column.name === "dxc_variation") {
+					if (column.dataType === "Lookup.Simple" && column.name === "dxc_variationd") {
 
 						//@ts-ignore
 						input.value = recordSet.records[recordId].getValue(column.name) === null ? "" : recordSet.records[recordId].getValue(column.name).name;
@@ -103,7 +103,6 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 
 							var filter = "<filter type='and'><condition attribute='statecode' operator='eq' value='0' /><condition attribute='dxc_jurisdiction' operator='eq' value='" + jurisdiction + "' /><condition attribute='dxc_game' operator='eq' value='" + gameId + "' /></filter>";
 
-							//@ts-ignore
 							var lookupOptions = {
 								defaultEntityType: "dxc_variationjurisdiction",
 								entityTypes: ["dxc_variationjurisdiction"],
@@ -136,7 +135,6 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 						input.value = recordSet.records[recordId].getValue(column.name) === null ? "" : recordSet.records[recordId].getValue(column.name).name;
 
 						input.addEventListener('click', e => {
-							//@ts-ignore
 							var lookupOptions = {
 								defaultEntityType: column.name,
 								entityTypes: [column.name],
@@ -173,7 +171,7 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 			var addNewButton = <HTMLButtonElement>document.createElement("button");
 			addNewButton.innerText = "Add";
 			//@ts-ignore
-			addNewButton.addEventListener("click", (e: Event) => Xrm.Navigation.navigateTo({ pageType: 'entityrecord', entityName: 'quotedetail', formType: 2 }, { target: 2, position: 1, width: { value: 60, unit: '%' } }));
+			addNewButton.addEventListener("click", (e: Event) => Xrm.Navigation.navigateTo({ pageType: 'entityrecord', entityName: 'quotedetail', formType: 2 }, { target: 2, position: 2, width: { value: 40, unit: '%' } }) );
 
 			var buttonDiv = <HTMLDivElement>document.createElement("div");
 			// recordDiv.className = "row";
