@@ -48,6 +48,13 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 
 			var headers = <HTMLDivElement>document.createElement("div");
 			headers.className = "header";
+
+			var editSpan = <HTMLSpanElement>document.createElement("span");
+			editSpan.className = "element "; //if not equals tag
+			editSpan.style.width = "50px";
+			headers.appendChild(editSpan);
+
+
 			context.parameters.recordSet.columns.forEach(column => {
 				var span = <HTMLSpanElement>document.createElement("span");
 				column.displayName !== 'Tags' && (span.className = "element "); //if not equals tag
@@ -65,6 +72,12 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 				editButton.innerText = "Edit";
 				//@ts-ignore
 				editButton.addEventListener("click", (e: Event) => { Xrm.Navigation.navigateTo({ pageType: 'entityrecord', entityName: 'quotedetail', entityId: editButton.parentElement.parentElement.id, formType: 2 }, { target: 2, position: 1, width: { value: 80, unit: '%' } }) });
+
+				var buttonSpan = <HTMLDivElement>document.createElement("span");
+				buttonSpan.appendChild(editButton);
+				buttonSpan.style.width = "50px";
+				recordDiv.appendChild(buttonSpan);
+
 
 				context.parameters.recordSet.columns.forEach(column => {
 
@@ -153,16 +166,12 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 
 				});
 
-				var buttonSpan = <HTMLDivElement>document.createElement("span");
-				// recordDiv.className = "row";
-				buttonSpan.appendChild(editButton);
-				recordDiv.appendChild(buttonSpan);
 
 				this._container.appendChild(recordDiv);
 			});
 
 			var addNewButton = <HTMLButtonElement>document.createElement("button");
-			addNewButton.innerText = "Add new";
+			addNewButton.innerText = "Add";
 			//@ts-ignore
 			addNewButton.addEventListener("click", (e: Event) => Xrm.Navigation.navigateTo({ pageType: 'entityrecord', entityName: 'quotedetail', formType: 2 }, { target: 2, position: 1, width: { value: 60, unit: '%' } }));
 
