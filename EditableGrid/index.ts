@@ -60,6 +60,12 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 			recordSet.sortedRecordIds.forEach(recordId => {
 				var recordDiv = <HTMLDivElement>document.createElement("div");
 				recordDiv.className = "row";
+
+				var editButton = <HTMLButtonElement>document.createElement("button");
+				editButton.innerText = "Edit";
+				//@ts-ignore
+				editButton.addEventListener("click", (e: Event) => { Xrm.Navigation.navigateTo({ pageType: 'entityrecord', entityName: 'quotedetail', entityId: editButton.parentElement.parentElement.id, formType: 2 }, { target: 2, position: 1, width: { value: 80, unit: '%' } }) });
+
 				context.parameters.recordSet.columns.forEach(column => {
 
 					recordDiv.id = recordId;
@@ -146,15 +152,6 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 
 
 				});
-
-				var editButton = <HTMLButtonElement>document.createElement("button");
-				editButton.innerText = "Edit";
-				//@ts-ignore
-				editButton.addEventListener("click", (e: Event) => { Xrm.Navigation.navigateTo({ pageType: 'entityrecord', entityName: 'quotedetail', entityId: editButton.parentElement.parentElement.id, formType: 2 }, { target: 2, position: 1, width: { value: 80, unit: '%' } }) }
-
-
-
-				);
 
 				var buttonSpan = <HTMLDivElement>document.createElement("span");
 				// recordDiv.className = "row";
