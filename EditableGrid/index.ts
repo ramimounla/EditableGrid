@@ -71,7 +71,7 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 				var editButton = <HTMLButtonElement>document.createElement("button");
 				editButton.innerText = "Edit";
 				//@ts-ignore
-				editButton.addEventListener("click", (e: Event) =>  Xrm.Navigation.navigateTo({ pageType: 'entityrecord', entityName: 'quotedetail', entityId: editButton.parentElement.parentElement.id, formType: 2 }, { target: 2, position: 1, width: { value: 80, unit: '%' } }).then(Xrm.Page.data.refresh(false) )  );
+				editButton.addEventListener("click", (e: Event) =>  Xrm.Navigation.navigateTo({ pageType: 'entityrecord', entityName: 'quotedetail', entityId: editButton.parentElement.parentElement.id, formType: 2 }, { target: 2, position: 1, width: { value: 80, unit: '%' } }).then(function success() { Xrm.Page.data.refresh(false) },function error() { })  );
 
 				var buttonSpan = <HTMLDivElement>document.createElement("span");
 				buttonSpan.appendChild(editButton);
