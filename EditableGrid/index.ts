@@ -130,6 +130,11 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 
 
 					}
+					//TODO check datatype instead of name
+					else if (column.displayName.toLowerCase().includes("date") && recordSet.records[recordId].getValue(column.name) != null) {
+						span.innerText = recordSet.records[recordId].getFormattedValue(column.name);
+						// span.innerText = moment(<string>recordSet.records[recordId].getValue(column.name), "YYYY-MM-DDTHH:mm:ss.SSSZ").format("YYYY-MM-DD");
+					}
 					else if (column.dataType === "Lookup.Simple") {
 						//@ts-ignore
 						input.value = recordSet.records[recordId].getValue(column.name) === null ? "" : recordSet.records[recordId].getValue(column.name).name;
