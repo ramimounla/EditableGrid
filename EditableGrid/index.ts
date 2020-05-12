@@ -6,6 +6,8 @@ type DataSet = ComponentFramework.PropertyTypes.DataSet;
 export class EditableGrid implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 
 	private _container: HTMLDivElement;
+	private _dataset: DataSet;
+	private _notifyOutputChanged: () => void;
 
 	/**
 	 * Empty constructor.
@@ -27,6 +29,8 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 		this._container.className = "table-like";
 
 		container.appendChild(this._container);
+
+		this._notifyOutputChanged = notifyOutputChanged;
 	}
 
 
@@ -45,6 +49,7 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 
 			this._container.innerHTML = "";
 			var recordSet = context.parameters.recordSet;
+			this._dataset = context.parameters.recordSet;
 
 			var headers = <HTMLDivElement>document.createElement("div");
 			headers.className = "header";
@@ -160,12 +165,14 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 									if (result.length > 0) {
 										input.value = result[0].name;
 									}
+									
 								})
 								.fail(function (error: any) {
 									alert(error);
 								});
-
-						});
+								
+							this._notifyOutputChanged();
+							});
 
 						span.appendChild(button);
 					}
@@ -200,7 +207,9 @@ export class EditableGrid implements ComponentFramework.StandardControl<IInputs,
 	 * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
 	 */
 	public getOutputs(): IOutputs {
-		return {};
+		return {
+			recordSet: this._dataset
+		};
 	}
 
 	/** 
